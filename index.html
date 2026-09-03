@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Round Six">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#14161A">
+<title>Round Six</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14161A;
+    --bg-raised:#1C1F26;
+    --bg-inset:#0F1114;
+    --line:#2A2E37;
+    --text:#EDECE7;
+    --text-dim:#8B909C;
+    --arms:#E8A33D;
+    --legs:#3DA5A0;
+    --abs:#E85D4C;
+    --back:#6C7FE0;
+    --focus: var(--arms);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Manrope',-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overscroll-behavior-y:none;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .display{font-family:'Bebas Neue',sans-serif;letter-spacing:0.02em;}
+  #app{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;}
+
+  header{
+    padding:22px 20px 14px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  header .brand{display:flex;align-items:baseline;gap:8px;}
+  header .brand .display{font-size:26px;line-height:1;}
+  header .brand .sub{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.12em;}
+  .streak-pill{
+    display:flex;align-items:center;gap:6px;
+    background:var(--bg-raised);border:1px solid var(--line);
+    border-radius:999px;padding:6px 12px 6px 10px;
+    font-size:13px;font-weight:700;
+  }
+  .streak-pill span.flame{font-size:14px;}
+
+  nav.tabs{
+    display:flex;margin:0 20px 18px;background:var(--bg-inset);
+    border-radius:12px;padding:4px;border:1px solid var(--line);
+  }
+  nav.tabs button{
+    flex:1;border:none;background:transparent;color:var(--text-dim);
+    font-family:inherit;font-weight:700;font-size:13px;padding:9px 0;
+    border-radius:9px;transition:background .15s,color .15s;
+  }
+  nav.tabs button.active{background:var(--focus);color:#101114;}
+
+  main{flex:1;padding:0 20px 100px;}
+  section.view{display:none;}
+  section.view.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  /* ---- Generator view ---- */
+  .focus-banner{
+    border-radius:16px;padding:16px 18px;margin-bottom:16px;
+    background:linear-gradient(135deg, color-mix(in srgb, var(--focus) 22%, var(--bg-raised)), var(--bg-raised));
+    border:1px solid color-mix(in srgb, var(--focus) 45%, var(--line));
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .focus-banner .label{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-dim);}
+  .focus-banner .cat{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--focus);}
+  .dot-row{display:flex;gap:6px;}
+  .dot-row .dot{width:8px;height:8px;border-radius:50%;background:var(--line);}
+  .dot-row .dot.active{background:var(--focus);}
+
+  .exercise-card{
+    background:var(--bg-raised);border:1px solid var(--line);border-radius:14px;
+    padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;
+  }
+  .exercise-card .tag{
+    width:5px;align-self:stretch;border-radius:4px;flex-shrink:0;
+  }
+  .exercise-card .name{font-weight:700;font-size:15px;}
+  .exercise-card .cat-label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-top:2px;}
+  .exercise-card .reps{margin-left:auto;font-family:'Bebas Neue';font-size:22px;color:var(--text-dim);white-space:nowrap;}
+
+  .btn{
+    display:block;width:100%;border:none;border-radius:14px;padding:15px;
+    font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;
+    transition:transform .08s ease, opacity .15s;
+  }
+  .btn:active{transform:scale(0.98);}
+  .btn-primary{background:var(--text);color:#101114;}
+  .btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--line);}
+  .btn-focus{background:var(--focus);color:#101114;}
+  .btn[disabled]{opacity:0.4;pointer-events:none;}
+  .stack{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+
+  /* ---- Timer view ---- */
+  .duration-row{display:flex;gap:8px;margin-bottom:22px;}
+  .duration-row button{
+    flex:1;padding:10px 0;border-radius:12px;border:1px solid var(--line);
+    background:var(--bg-raised);color:var(--text);font-family:inherit;font-weight:700;font-size:14px;
+  }
+  .duration-row button.active{background:var(--focus);color:#101114;border-color:var(--focus);}
+
+  .timer-ring-wrap{position:relative;width:240px;height:240px;margin:10px auto 22px;}
+  .timer-ring-wrap svg{transform:rotate(-90deg);width:100%;height:100%;}
+  .timer-ring-wrap .track{fill:none;stroke:var(--bg-inset);stroke-width:10;}
+  .timer-ring-wrap .progress{fill:none;stroke:var(--focus);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .3s linear;}
+  .timer-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .timer-center .time{font-family:'Bebas Neue';font-size:52px;line-height:1;}
+  .timer-center .amrap{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.14em;margin-top:4px;}
+
+  .round-counter{
+    display:flex;align-items:center;justify-content:center;gap:22px;
+    background:var(--bg-raised);border:1px solid var(--line);border-radius:16px;
+    padding:16px;margin-bottom:16px;
+  }
+  .round-counter button{
+    width:44px;height:44px;border-radius:50%;border:1px solid var(--line);
+    background:var(--bg-inset);color:var(--text);font-size:20px;font-weight:800;
+  }
+  .round-counter .count{text-align:center;}
+  .round-counter .count .n{font-family:'Bebas Neue';font-size:34px;display:block;line-height:1;}
+  .round-counter .count .l{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;}
+
+  .mini-list{font-size:13px;color:var(--text-dim);margin:0 0 18px;padding:0;list-style:none;}
+  .mini-list li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);}
+  .mini-list li b{color:var(--text);font-weight:600;}
+
+  /* ---- History / streak view ---- */
+  .streak-hero{text-align:center;padding:18px 0 22px;}
+  .streak-hero .n{font-family:'Bebas Neue';font-size:64px;color:var(--focus);line-height:1;}
+  .streak-hero .l{font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.12em;}
+
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:22px;}
+  .cal-grid .dow{font-size:10px;color:var(--text-dim);text-align:center;text-transform:uppercase;}
+  .cal-cell{aspect-ratio:1;border-radius:8px;background:var(--bg-inset);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text-dim);border:1px solid transparent;}
+  .cal-cell.done{background:color-mix(in srgb, var(--arms) 30%, var(--bg-inset));color:var(--text);font-weight:700;border-color:color-mix(in srgb, var(--arms) 55%, transparent);}
+  .cal-cell.today{border-color:var(--text);}
+  .cal-cell.empty{background:transparent;}
+
+  .hist-item{
+    background:var(--bg-raised);border:1px solid var(--line);border-radius:14px;
+    padding:12px 16px;margin-bottom:10px;
+  }
+  .hist-item .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .hist-item .date{font-weight:700;font-size:14px;}
+  .hist-item .badge{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;padding:3px 8px;border-radius:999px;font-weight:800;}
+  .hist-item .meta{font-size:12px;color:var(--text-dim);}
+  .empty-state{text-align:center;color:var(--text-dim);font-size:13px;padding:40px 20px;}
+
+  .toast{
+    position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);
+    background:var(--text);color:#101114;font-weight:700;font-size:13px;
+    padding:12px 20px;border-radius:999px;opacity:0;pointer-events:none;
+    transition:opacity .25s, transform .25s;z-index:50;white-space:nowrap;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header>
+    <div class="brand">
+      <span class="display">ROUND SIX</span>
+      <span class="sub">amrap builder</span>
+    </div>
+    <div class="streak-pill"><span class="flame">🔥</span><span id="streakMini">0</span></div>
+  </header>
+
+  <nav class="tabs">
+    <button data-view="generate" class="active">Workout</button>
+    <button data-view="timer">Timer</button>
+    <button data-view="history">History</button>
+  </nav>
+
+  <main>
+
+    <!-- GENERATE -->
+    <section class="view active" id="view-generate">
+      <div class="focus-banner">
+        <div>
+          <div class="label">Today's focus</div>
+          <div class="cat" id="focusName">Arms / Chest</div>
+        </div>
+        <div class="dot-row" id="focusDots"></div>
+      </div>
+
+      <div id="exerciseList"></div>
+
+      <div class="stack">
+        <button class="btn btn-focus" id="genBtn">Generate Workout</button>
+        <button class="btn btn-ghost" id="toTimerBtn" disabled>Start AMRAP →</button>
+      </div>
+    </section>
+
+    <!-- TIMER -->
+    <section class="view" id="view-timer">
+      <ul class="mini-list" id="timerExerciseSummary"></ul>
+
+      <div class="duration-row" id="durationRow">
+        <button data-min="10">10 min</button>
+        <button data-min="15" class="active">15 min</button>
+        <button data-min="20">20 min</button>
+      </div>
+
+      <div class="timer-ring-wrap">
+        <svg viewBox="0 0 240 240">
+          <circle class="track" cx="120" cy="120" r="106"></circle>
+          <circle class="progress" id="ringProgress" cx="120" cy="120" r="106"></circle>
+        </svg>
+        <div class="timer-center">
+          <div class="time" id="timeLabel">15:00</div>
+          <div class="amrap">as many rounds as possible</div>
+        </div>
+      </div>
+
+      <div class="round-counter">
+        <button id="roundMinus">−</button>
+        <div class="count"><span class="n" id="roundCount">0</span><span class="l">rounds</span></div>
+        <button id="roundPlus">+</button>
+      </div>
+
+      <div class="stack">
+        <button class="btn btn-focus" id="startPauseBtn">Start</button>
+        <button class="btn btn-ghost" id="finishBtn">Finish &amp; Save Workout</button>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="view" id="view-history">
+      <div class="streak-hero">
+        <div class="n" id="streakBig">0</div>
+        <div class="l">day streak</div>
+      </div>
+
+      <div class="cal-grid" id="calGrid"></div>
+
+      <div id="historyList"></div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+
+/* ---------------------------------------------------------
+   EXERCISE DATABASE — categorized, deduped from source doc
+--------------------------------------------------------- */
+const EXERCISES = {
+  arms: [
+    "Kneeling Push Ups","Incline Push Ups","Standard Push Ups","Wall Push Ups",
+    "Close Grip Push Ups","Decline Push Ups","Diamond Push Ups","Pike Push Ups",
+    "Explosive Push Ups / Claps","Archer Push Ups","Deficit Push Ups","Handstand Push Ups",
+    "Tension / Slow Count Push Ups","Chair Dips","Feet Elevated Dips","Body Weight Dips",
+    "Bicep Curls","Resistance Band Curls","DB Hammer Curls","Concentration Curls",
+    "Kettlebell Floor Press","Kettlebell Shoulder Press","Kettlebell Push Up Rows",
+    "Kettlebell Clean to Press","DB / KB Tricep Extensions","DB Lateral Raises",
+    "Upright Row","DB Overhead Press","Alternating DB Chest Press","DB Arnold Press",
+    "DB Front Raises","Half-Kneeling Single-Arm Shoulder Press"
+  ],
+  legs: [
+    "Bodyweight Squats","Reverse Lunges","Glute Bridges","Step-Ups","Calf Raises",
+    "Walk","Stationary Bike","KB Goblet Squats","Walking Lunges","Single Leg Glute Bridge",
+    "Bulgarian Split Squats","Jump Squats","Jump Lunges","KB Swings",
+    "Around the World Reverse Lunges","Hamstring Curls","Pistol Squat Progressions",
+    "Weighted Step Ups","Romanian Deadlifts","Static Lunges w/ KB Pass Through Legs",
+    "Glute Bridges w/ KB","KB Overhead Squats","Bulgarian Split Squats w/ KB",
+    "Front Rack Squats","Standing Marches","Bodyweight Split Squats","Heel Elevated Squats",
+    "Wall Sit","Glute Bridge March","Lateral Lunges","Split Squats","Staggered Stance RDL",
+    "B-Stance RDL","Squat Hold","Curtsy Lunges","DB Sumo Squats","DB Front Loaded Squats"
+  ],
+  abs: [
+    "Dead Bugs","Crunches","Leg Raises","Plank","Penguins","V-Ups","Hanging Knee Raises",
+    "Side Planks","Russian Twists","KB Marches","Plank Shoulder Taps","Mountain Climbers",
+    "Hollow Hold","Hanging Leg Raises","Toe-to-Bar Progressions","Plank Walk-Outs",
+    "KB Sit Up to Press","KB Overhead Marches","Weighted Hollow Hold","KB Halos",
+    "Half Kneeling Chops","Ab Roll Outs","Push Up Shoulder Taps","Side Plank Reach Through",
+    "Inchworm","Bear Hold","Standing Oblique Crunches"
+  ],
+  back: [
+    "Supermans","Bent-Over Rows","Reverse Snow Angels","Doorway Isometric Pulls",
+    "Pull-Ups / Chin-Ups","Pull-Up Negatives","Banded Bent-Over Rows","KB Single-Arm Rows",
+    "Hip Hinge / Good Mornings","Back Extensions","Inverted Doorway Rows","KB Renegade Rows",
+    "KB Gorilla Rows","Explosive Hip Hinges","Weighted Supermans",
+    "Pull-Ups / Chin-Ups w/ Weighted Vest","Inverted Rows (Feet Elevated)","Archer Pull-Ups",
+    "Climber Pull-Ups","Bird Dogs","Scapular Pulls","Y-Raises","Flexed Arm Hang",
+    "Single-Arm DB Rows","Resistance Band Lat Pulldowns","Bent-Over Reverse Fly","Band Pull-Aparts"
+  ]
+};
+
+const CAT_ORDER = ["arms","legs","abs","back"];
+const CAT_LABEL = {arms:"Arms / Chest", legs:"Legs", abs:"Abs", back:"Back"};
+const CAT_VAR   = {arms:"--arms", legs:"--legs", abs:"--abs", back:"--back"};
+
+/* ---------------------------------------------------------
+   STATE / STORAGE
+--------------------------------------------------------- */
+const LS = {
+  rotation: "rs_rotationIndex",
+  history:  "rs_history",
+  current:  "rs_currentWorkout"
+};
+
+function loadRotation(){ return parseInt(localStorage.getItem(LS.rotation) || "0", 10); }
+function saveRotation(i){ localStorage.setItem(LS.rotation, String(i)); }
+function loadHistory(){ try{ return JSON.parse(localStorage.getItem(LS.history)) || []; }catch(e){ return []; } }
+function saveHistory(h){ localStorage.setItem(LS.history, JSON.stringify(h)); }
+function loadCurrent(){ try{ return JSON.parse(localStorage.getItem(LS.current)); }catch(e){ return null; } }
+function saveCurrent(c){ localStorage.setItem(LS.current, JSON.stringify(c)); }
+function clearCurrent(){ localStorage.removeItem(LS.current); }
+
+function pickN(arr, n){
+  const pool = arr.slice();
+  const out = [];
+  for(let i=0;i<n && pool.length;i++){
+    const idx = Math.floor(Math.random()*pool.length);
+    out.push(pool.splice(idx,1)[0]);
+  }
+  return out;
+}
+
+function setFocusColor(cat){
+  document.documentElement.style.setProperty('--focus', `var(${CAT_VAR[cat]})`);
+}
+
+/* ---------------------------------------------------------
+   GENERATE WORKOUT
+--------------------------------------------------------- */
+function generateWorkout(){
+  const rotIdx = loadRotation();
+  const focus = CAT_ORDER[rotIdx % 4];
+  let list = [];
+  CAT_ORDER.forEach(cat=>{
+    const n = cat === focus ? 3 : 1;
+    pickN(EXERCISES[cat], n).forEach(name=> list.push({name, cat}));
+  });
+  // shuffle display order
+  list = pickN(list, list.length);
+
+  saveRotation((rotIdx+1) % 4);
+  const workout = { focus, exercises: list, createdAt: new Date().toISOString() };
+  saveCurrent(workout);
+  return workout;
+}
+
+function renderFocusDots(activeIdx){
+  const wrap = document.getElementById('focusDots');
+  wrap.innerHTML = '';
+  CAT_ORDER.forEach((c,i)=>{
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===activeIdx?' active':'');
+    wrap.appendChild(d);
+  });
+}
+
+function renderExerciseList(workout){
+  const wrap = document.getElementById('exerciseList');
+  wrap.innerHTML = '';
+  if(!workout){
+    wrap.innerHTML = '<div class="empty-state">Tap Generate Workout to build today\'s 6.</div>';
+    return;
+  }
+  workout.exercises.forEach(ex=>{
+    const card = document.createElement('div');
+    card.className = 'exercise-card';
+    card.innerHTML = `
+      <div class="tag" style="background:var(${CAT_VAR[ex.cat]})"></div>
+      <div>
+        <div class="name">${ex.name}</div>
+        <div class="cat-label">${CAT_LABEL[ex.cat]}</div>
+      </div>
+      <div class="reps">~10</div>
+    `;
+    wrap.appendChild(card);
+  });
+}
+
+function refreshGenerateView(){
+  const current = loadCurrent();
+  const rotIdx = loadRotation();
+  document.getElementById('focusName').textContent = CAT_LABEL[CAT_ORDER[rotIdx % 4]];
+  setFocusColor(CAT_ORDER[rotIdx % 4]);
+  renderFocusDots(rotIdx % 4);
+  renderExerciseList(current);
+  document.getElementById('toTimerBtn').disabled = !current;
+  if(current){
+    setFocusColor(current.focus);
+    document.getElementById('focusName').textContent = CAT_LABEL[current.focus];
+    renderFocusDots(CAT_ORDER.indexOf(current.focus));
+  }
+}
+
+document.getElementById('genBtn').addEventListener('click', ()=>{
+  const w = generateWorkout();
+  setFocusColor(w.focus);
+  document.getElementById('focusName').textContent = CAT_LABEL[w.focus];
+  renderFocusDots(CAT_ORDER.indexOf(w.focus));
+  renderExerciseList(w);
+  document.getElementById('toTimerBtn').disabled = false;
+});
+
+/* ---------------------------------------------------------
+   TABS
+--------------------------------------------------------- */
+const tabButtons = document.querySelectorAll('nav.tabs button');
+const views = document.querySelectorAll('section.view');
+function showView(name){
+  tabButtons.forEach(b=> b.classList.toggle('active', b.dataset.view===name));
+  views.forEach(v=> v.classList.toggle('active', v.id === 'view-'+name));
+  if(name==='timer') refreshTimerView();
+  if(name==='history') refreshHistoryView();
+  if(name==='generate') refreshGenerateView();
+}
+tabButtons.forEach(b=> b.addEventListener('click', ()=> showView(b.dataset.view)));
+document.getElementById('toTimerBtn').addEventListener('click', ()=> showView('timer'));
+
+/* ---------------------------------------------------------
+   TIMER
+--------------------------------------------------------- */
+let durationMin = 15;
+let remainingSec = durationMin*60;
+let timerInterval = null;
+let running = false;
+let rounds = 0;
+const RADIUS = 106;
+const CIRC = 2*Math.PI*RADIUS;
+const ring = document.getElementById('ringProgress');
+ring.style.strokeDasharray = CIRC;
+ring.style.strokeDashoffset = 0;
+
+function fmt(sec){
+  const m = Math.floor(sec/60), s = sec%60;
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function updateTimerDisplay(){
+  document.getElementById('timeLabel').textContent = fmt(remainingSec);
+  const total = durationMin*60;
+  const frac = 1 - (remainingSec/total);
+  ring.style.strokeDashoffset = CIRC * frac;
+}
+function beep(){
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    const o = ctx.createOscillator(); const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.frequency.value = 880; g.gain.value = 0.15;
+    o.start(); setTimeout(()=>{ o.stop(); ctx.close(); }, 350);
+  }catch(e){}
+  if(navigator.vibrate) navigator.vibrate([200,100,200]);
+}
+function tick(){
+  remainingSec--;
+  if(remainingSec<=0){
+    remainingSec = 0;
+    updateTimerDisplay();
+    stopTimer();
+    beep();
+    showToast("Time! Log your final round count.");
+    return;
+  }
+  updateTimerDisplay();
+}
+function startTimer(){
+  running = true;
+  document.getElementById('startPauseBtn').textContent = 'Pause';
+  timerInterval = setInterval(tick, 1000);
+}
+function stopTimer(){
+  running = false;
+  document.getElementById('startPauseBtn').textContent = 'Resume';
+  clearInterval(timerInterval);
+}
+document.getElementById('startPauseBtn').addEventListener('click', ()=>{
+  if(running) stopTimer(); else startTimer();
+});
+document.querySelectorAll('#durationRow button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#durationRow button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    durationMin = parseInt(btn.dataset.min,10);
+    remainingSec = durationMin*60;
+    stopTimer();
+    document.getElementById('startPauseBtn').textContent = 'Start';
+    updateTimerDisplay();
+  });
+});
+document.getElementById('roundPlus').addEventListener('click', ()=>{
+  rounds++; document.getElementById('roundCount').textContent = rounds;
+});
+document.getElementById('roundMinus').addEventListener('click', ()=>{
+  rounds = Math.max(0, rounds-1); document.getElementById('roundCount').textContent = rounds;
+});
+
+function refreshTimerView(){
+  const current = loadCurrent();
+  const summary = document.getElementById('timerExerciseSummary');
+  summary.innerHTML = '';
+  if(current){
+    setFocusColor(current.focus);
+    current.exercises.forEach(ex=>{
+      const li = document.createElement('li');
+      li.innerHTML = `<span>${ex.name}</span><b>${CAT_LABEL[ex.cat]}</b>`;
+      summary.appendChild(li);
+    });
+  }
+  updateTimerDisplay();
+}
+
+document.getElementById('finishBtn').addEventListener('click', ()=>{
+  const current = loadCurrent();
+  if(!current){ showToast("Generate a workout first."); return; }
+  stopTimer();
+  const entry = {
+    date: new Date().toISOString().slice(0,10),
+    focus: current.focus,
+    duration: durationMin,
+    rounds: rounds,
+    exercises: current.exercises
+  };
+  const hist = loadHistory();
+  hist.push(entry);
+  saveHistory(hist);
+  clearCurrent();
+  rounds = 0;
+  document.getElementById('roundCount').textContent = 0;
+  remainingSec = durationMin*60;
+  updateTimerDisplay();
+  document.getElementById('startPauseBtn').textContent = 'Start';
+  document.getElementById('toTimerBtn').disabled = true;
+  showToast("Workout saved 💪");
+  showView('history');
+});
+
+/* ---------------------------------------------------------
+   HISTORY / STREAK / CALENDAR
+--------------------------------------------------------- */
+function uniqueDates(hist){
+  return [...new Set(hist.map(h=>h.date))].sort();
+}
+function computeStreak(hist){
+  const dates = new Set(uniqueDates(hist));
+  if(dates.size === 0) return 0;
+  let streak = 0;
+  let cursor = new Date();
+  cursor.setHours(0,0,0,0);
+  // if no workout today, streak counts back from yesterday (today not yet broken)
+  const todayStr = cursor.toISOString().slice(0,10);
+  if(!dates.has(todayStr)){
+    cursor.setDate(cursor.getDate()-1);
+  }
+  while(true){
+    const str = cursor.toISOString().slice(0,10);
+    if(dates.has(str)){
+      streak++;
+      cursor.setDate(cursor.getDate()-1);
+    } else break;
+  }
+  return streak;
+}
+function renderCalendar(hist){
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+  const dateSet = new Set(uniqueDates(hist));
+  const now = new Date();
+  const year = now.getFullYear(), month = now.getMonth();
+  const first = new Date(year, month, 1);
+  const startDow = first.getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const todayStr = now.toISOString().slice(0,10);
+
+  ['S','M','T','W','T','F','S'].forEach(d=>{
+    const el = document.createElement('div');
+    el.className = 'dow'; el.textContent = d;
+    grid.appendChild(el);
+  });
+  for(let i=0;i<startDow;i++){
+    const el = document.createElement('div');
+    el.className = 'cal-cell empty';
+    grid.appendChild(el);
+  }
+  for(let d=1; d<=daysInMonth; d++){
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const el = document.createElement('div');
+    el.className = 'cal-cell' + (dateSet.has(dateStr)?' done':'') + (dateStr===todayStr?' today':'');
+    el.textContent = d;
+    grid.appendChild(el);
+  }
+}
+function refreshHistoryView(){
+  const hist = loadHistory().slice().reverse();
+  const streak = computeStreak(loadHistory());
+  document.getElementById('streakBig').textContent = streak;
+  document.getElementById('streakMini').textContent = streak;
+  renderCalendar(loadHistory());
+
+  const list = document.getElementById('historyList');
+  list.innerHTML = '';
+  if(hist.length===0){
+    list.innerHTML = '<div class="empty-state">No workouts logged yet. Finish an AMRAP to start your streak.</div>';
+    return;
+  }
+  hist.forEach(h=>{
+    const item = document.createElement('div');
+    item.className = 'hist-item';
+    const d = new Date(h.date+'T00:00:00');
+    const dateLabel = d.toLocaleDateString(undefined,{weekday:'short', month:'short', day:'numeric'});
+    item.innerHTML = `
+      <div class="row1">
+        <span class="date">${dateLabel}</span>
+        <span class="badge" style="background:var(${CAT_VAR[h.focus]});color:#101114">${CAT_LABEL[h.focus]}</span>
+      </div>
+      <div class="meta">${h.duration} min AMRAP · ${h.rounds} round${h.rounds===1?'':'s'} · ${h.exercises.length} exercises</div>
+    `;
+    list.appendChild(item);
+  });
+}
+
+/* ---------------------------------------------------------
+   TOAST
+--------------------------------------------------------- */
+let toastTimer = null;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('show'), 2400);
+}
+
+/* ---------------------------------------------------------
+   INIT
+--------------------------------------------------------- */
+(function init(){
+  const streak = computeStreak(loadHistory());
+  document.getElementById('streakMini').textContent = streak;
+  refreshGenerateView();
+  updateTimerDisplay();
+})();
+
+})();
+</script>
+</body>
+</html>
