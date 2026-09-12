@@ -23,6 +23,7 @@
     --legs:#3DA5A0;
     --abs:#E85D4C;
     --back:#6C7FE0;
+    --rest:#9AA0AC;
     --focus: var(--arms);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -60,7 +61,7 @@
   }
   nav.tabs button{
     flex:1;border:none;background:transparent;color:var(--text-dim);
-    font-family:inherit;font-weight:700;font-size:13px;padding:9px 0;
+    font-family:inherit;font-weight:700;font-size:11.5px;padding:9px 0;
     border-radius:9px;transition:background .15s,color .15s;
   }
   nav.tabs button.active{background:var(--focus);color:#101114;}
@@ -72,7 +73,7 @@
 
   /* ---- Generator view ---- */
   .focus-banner{
-    border-radius:16px;padding:16px 18px;margin-bottom:16px;
+    border-radius:16px;padding:16px 18px;margin-bottom:12px;
     background:linear-gradient(135deg, color-mix(in srgb, var(--focus) 22%, var(--bg-raised)), var(--bg-raised));
     border:1px solid color-mix(in srgb, var(--focus) 45%, var(--line));
     display:flex;align-items:center;justify-content:space-between;
@@ -82,6 +83,14 @@
   .dot-row{display:flex;gap:6px;}
   .dot-row .dot{width:8px;height:8px;border-radius:50%;background:var(--line);}
   .dot-row .dot.active{background:var(--focus);}
+
+  .today-status{
+    font-size:12.5px;color:var(--text-dim);text-align:center;
+    padding:8px 10px;margin-bottom:14px;border:1px dashed var(--line);border-radius:10px;
+    display:none;
+  }
+  .today-status.show{display:block;}
+  .today-status b{color:var(--text);}
 
   .exercise-card{
     background:var(--bg-raised);border:1px solid var(--line);border-radius:14px;
@@ -103,6 +112,7 @@
   .btn-primary{background:var(--text);color:#101114;}
   .btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--line);}
   .btn-focus{background:var(--focus);color:#101114;}
+  .btn-rest{background:transparent;color:var(--rest);border:1px solid var(--rest);}
   .btn[disabled]{opacity:0.4;pointer-events:none;}
   .stack{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
 
@@ -120,7 +130,7 @@
   .timer-ring-wrap .progress{fill:none;stroke:var(--focus);stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .3s linear;}
   .timer-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
   .timer-center .time{font-family:'Bebas Neue';font-size:52px;line-height:1;}
-  .timer-center .amrap{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.14em;margin-top:4px;}
+  .timer-center .amrap{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.14em;margin-top:4px;text-align:center;padding:0 20px;}
 
   .round-counter{
     display:flex;align-items:center;justify-content:center;gap:22px;
@@ -139,6 +149,40 @@
   .mini-list li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);}
   .mini-list li b{color:var(--text);font-weight:600;}
 
+  /* ---- Warmup view ---- */
+  .warmup-row{
+    display:flex;align-items:center;gap:8px;background:var(--bg-raised);
+    border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;
+  }
+  .warmup-row input[type=text]{
+    flex:1;background:transparent;border:none;color:var(--text);font-family:inherit;
+    font-weight:600;font-size:14px;outline:none;min-width:0;
+  }
+  .warmup-row input[type=number]{
+    width:56px;background:var(--bg-inset);border:1px solid var(--line);border-radius:8px;
+    color:var(--text);font-family:inherit;font-weight:700;font-size:13px;padding:6px 4px;text-align:center;outline:none;
+  }
+  .warmup-row .sec-label{font-size:11px;color:var(--text-dim);}
+  .warmup-row .rm{background:transparent;border:none;color:var(--text-dim);font-size:18px;padding:0 2px;}
+  .warmup-row.locked input, .warmup-row.locked .rm{opacity:0.45;pointer-events:none;}
+
+  .add-warmup-btn{
+    width:100%;padding:10px;border:1px dashed var(--line);border-radius:12px;
+    background:transparent;color:var(--text-dim);font-family:inherit;font-weight:700;font-size:13px;margin-bottom:18px;
+  }
+
+  .warmup-active-card{
+    background:var(--bg-raised);border:1px solid var(--line);border-radius:16px;
+    padding:22px;text-align:center;margin-bottom:18px;
+  }
+  .warmup-active-card .idx{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;}
+  .warmup-active-card .name{font-family:'Bebas Neue';font-size:30px;margin-bottom:14px;line-height:1.1;}
+  .warmup-active-card .time{font-family:'Bebas Neue';font-size:56px;color:var(--focus);line-height:1;}
+  .warmup-dots{display:flex;gap:6px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+  .warmup-dots .d{width:8px;height:8px;border-radius:50%;background:var(--line);}
+  .warmup-dots .d.done{background:var(--focus);}
+  .warmup-dots .d.cur{background:var(--text);}
+
   /* ---- History / streak view ---- */
   .streak-hero{text-align:center;padding:18px 0 22px;}
   .streak-hero .n{font-family:'Bebas Neue';font-size:64px;color:var(--focus);line-height:1;}
@@ -146,14 +190,23 @@
 
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:22px;}
   .cal-grid .dow{font-size:10px;color:var(--text-dim);text-align:center;text-transform:uppercase;}
-  .cal-cell{aspect-ratio:1;border-radius:8px;background:var(--bg-inset);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text-dim);border:1px solid transparent;}
-  .cal-cell.done{background:color-mix(in srgb, var(--arms) 30%, var(--bg-inset));color:var(--text);font-weight:700;border-color:color-mix(in srgb, var(--arms) 55%, transparent);}
+  .cal-cell{
+    aspect-ratio:1;border-radius:8px;background:var(--bg-inset);
+    display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text-dim);
+    border:1px solid transparent;position:relative;
+  }
+  .cal-cell.done{
+    background:color-mix(in srgb, var(--cell-color, var(--text-dim)) 30%, var(--bg-inset));
+    color:var(--text);font-weight:700;
+    border-color:color-mix(in srgb, var(--cell-color, var(--text-dim)) 55%, transparent);
+    cursor:pointer;
+  }
   .cal-cell.today{border-color:var(--text);}
   .cal-cell.empty{background:transparent;}
 
   .hist-item{
     background:var(--bg-raised);border:1px solid var(--line);border-radius:14px;
-    padding:12px 16px;margin-bottom:10px;
+    padding:12px 16px;margin-bottom:10px;cursor:pointer;
   }
   .hist-item .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
   .hist-item .date{font-weight:700;font-size:14px;}
@@ -166,8 +219,29 @@
     background:var(--text);color:#101114;font-weight:700;font-size:13px;
     padding:12px 20px;border-radius:999px;opacity:0;pointer-events:none;
     transition:opacity .25s, transform .25s;z-index:50;white-space:nowrap;
+    max-width:80vw;text-align:center;white-space:normal;
   }
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* ---- Modal ---- */
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:60;
+    display:none;align-items:flex-end;justify-content:center;
+  }
+  .modal-backdrop.show{display:flex;}
+  .modal-sheet{
+    background:var(--bg-raised);border:1px solid var(--line);border-top-left-radius:20px;border-top-right-radius:20px;
+    width:100%;max-width:520px;padding:22px 22px calc(24px + env(safe-area-inset-bottom));
+    max-height:80vh;overflow-y:auto;
+  }
+  .modal-sheet .mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .modal-sheet .mtitle{font-family:'Bebas Neue';font-size:24px;}
+  .modal-sheet .mclose{background:var(--bg-inset);border:1px solid var(--line);border-radius:50%;width:32px;height:32px;color:var(--text);font-size:16px;}
+  .modal-sheet .mbadge{display:inline-block;font-size:10px;text-transform:uppercase;letter-spacing:0.08em;padding:4px 10px;border-radius:999px;font-weight:800;margin-bottom:10px;}
+  .modal-sheet .mmeta{font-size:13px;color:var(--text-dim);margin-bottom:14px;}
+  .modal-sheet .mex{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;}
+  .modal-sheet .mex b{font-weight:700;}
+  .modal-sheet .mex span{color:var(--text-dim);font-size:11px;text-transform:uppercase;letter-spacing:0.06em;}
 </style>
 </head>
 <body>
@@ -183,7 +257,8 @@
 
   <nav class="tabs">
     <button data-view="generate" class="active">Workout</button>
-    <button data-view="timer">Timer</button>
+    <button data-view="timer">AMRAP</button>
+    <button data-view="warmup">Warmup</button>
     <button data-view="history">History</button>
   </nav>
 
@@ -199,11 +274,14 @@
         <div class="dot-row" id="focusDots"></div>
       </div>
 
+      <div class="today-status" id="todayStatus"></div>
+
       <div id="exerciseList"></div>
 
       <div class="stack">
         <button class="btn btn-focus" id="genBtn">Generate Workout</button>
         <button class="btn btn-ghost" id="toTimerBtn" disabled>Start AMRAP →</button>
+        <button class="btn btn-rest" id="restDayBtn">Log Rest Day (counts toward streak)</button>
       </div>
     </section>
 
@@ -240,6 +318,24 @@
       </div>
     </section>
 
+    <!-- WARMUP -->
+    <section class="view" id="view-warmup">
+      <div class="warmup-active-card" id="warmupActiveCard" style="display:none;">
+        <div class="idx" id="wuIdxLabel">Warmup 1 of 5</div>
+        <div class="name" id="wuNameLabel">Standing Marches</div>
+        <div class="time" id="wuTimeLabel">00:30</div>
+        <div class="warmup-dots" id="wuDots"></div>
+      </div>
+
+      <div id="warmupListWrap"></div>
+      <button class="add-warmup-btn" id="addWarmupBtn">+ Add warmup exercise</button>
+
+      <div class="stack">
+        <button class="btn btn-focus" id="wuStartPauseBtn">Start</button>
+        <button class="btn btn-ghost" id="wuEndBtn">End Warmup</button>
+      </div>
+    </section>
+
     <!-- HISTORY -->
     <section class="view" id="view-history">
       <div class="streak-hero">
@@ -255,6 +351,16 @@
   </main>
 </div>
 
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal-sheet">
+    <div class="mhead">
+      <div class="mtitle" id="modalTitle">Details</div>
+      <button class="mclose" id="modalClose">✕</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -262,6 +368,7 @@
 
 /* ---------------------------------------------------------
    EXERCISE DATABASE — categorized, deduped from source doc
+   + expanded KB/DB variety + TRX/band pull-up alternatives
 --------------------------------------------------------- */
 const EXERCISES = {
   arms: [
@@ -273,7 +380,10 @@ const EXERCISES = {
     "Kettlebell Floor Press","Kettlebell Shoulder Press","Kettlebell Push Up Rows",
     "Kettlebell Clean to Press","DB / KB Tricep Extensions","DB Lateral Raises",
     "Upright Row","DB Overhead Press","Alternating DB Chest Press","DB Arnold Press",
-    "DB Front Raises","Half-Kneeling Single-Arm Shoulder Press"
+    "DB Front Raises","Half-Kneeling Single-Arm Shoulder Press",
+    "KB Push Press","KB Around-the-Body Pass","DB Chest Fly","DB Incline Press",
+    "DB Skull Crushers","KB Bottoms-Up Press","DB Squeeze Press","TRX Chest Press",
+    "TRX Tricep Extension","TRX Bicep Curl","Banded Tricep Push-Down"
   ],
   legs: [
     "Bodyweight Squats","Reverse Lunges","Glute Bridges","Step-Ups","Calf Raises",
@@ -284,7 +394,9 @@ const EXERCISES = {
     "Glute Bridges w/ KB","KB Overhead Squats","Bulgarian Split Squats w/ KB",
     "Front Rack Squats","Standing Marches","Bodyweight Split Squats","Heel Elevated Squats",
     "Wall Sit","Glute Bridge March","Lateral Lunges","Split Squats","Staggered Stance RDL",
-    "B-Stance RDL","Squat Hold","Curtsy Lunges","DB Sumo Squats","DB Front Loaded Squats"
+    "B-Stance RDL","Squat Hold","Curtsy Lunges","DB Sumo Squats","DB Front Loaded Squats",
+    "KB Deadlift","KB Single Leg Deadlift","DB Deadlift","DB Step Ups","DB Walking Lunges",
+    "DB Goblet Reverse Lunge","KB Suitcase Carry","DB Farmer's Carry","KB Snatch"
   ],
   abs: [
     "Dead Bugs","Crunches","Leg Raises","Plank","Penguins","V-Ups","Hanging Knee Raises",
@@ -292,7 +404,9 @@ const EXERCISES = {
     "Hollow Hold","Hanging Leg Raises","Toe-to-Bar Progressions","Plank Walk-Outs",
     "KB Sit Up to Press","KB Overhead Marches","Weighted Hollow Hold","KB Halos",
     "Half Kneeling Chops","Ab Roll Outs","Push Up Shoulder Taps","Side Plank Reach Through",
-    "Inchworm","Bear Hold","Standing Oblique Crunches"
+    "Inchworm","Bear Hold","Standing Oblique Crunches",
+    "KB Figure 8s","DB Russian Twists","KB Windmills","DB Side Bends","KB Turkish Get-Up",
+    "Weighted Sit-Ups","DB Plank Row","KB Suitcase Hold"
   ],
   back: [
     "Supermans","Bent-Over Rows","Reverse Snow Angels","Doorway Isometric Pulls",
@@ -301,7 +415,9 @@ const EXERCISES = {
     "KB Gorilla Rows","Explosive Hip Hinges","Weighted Supermans",
     "Pull-Ups / Chin-Ups w/ Weighted Vest","Inverted Rows (Feet Elevated)","Archer Pull-Ups",
     "Climber Pull-Ups","Bird Dogs","Scapular Pulls","Y-Raises","Flexed Arm Hang",
-    "Single-Arm DB Rows","Resistance Band Lat Pulldowns","Bent-Over Reverse Fly","Band Pull-Aparts"
+    "Single-Arm DB Rows","Resistance Band Lat Pulldowns","Bent-Over Reverse Fly","Band Pull-Aparts",
+    "Face Pulls (Band or Cable)","TRX Rows","TRX Y-Raise","TRX Reverse Fly",
+    "TRX Single-Arm Row","DB Pullover","KB High Pull","Chest-Supported DB Rows"
   ]
 };
 
@@ -315,8 +431,17 @@ const CAT_VAR   = {arms:"--arms", legs:"--legs", abs:"--abs", back:"--back"};
 const LS = {
   rotation: "rs_rotationIndex",
   history:  "rs_history",
-  current:  "rs_currentWorkout"
+  current:  "rs_currentWorkout",
+  warmup:   "rs_warmupList"
 };
+
+const DEFAULT_WARMUP = [
+  {name:"Standing Marches", seconds:30},
+  {name:"Arm Circles", seconds:20},
+  {name:"Bodyweight Squats", seconds:30},
+  {name:"Walkouts", seconds:20},
+  {name:"Hip Openers", seconds:30}
+];
 
 function loadRotation(){ return parseInt(localStorage.getItem(LS.rotation) || "0", 10); }
 function saveRotation(i){ localStorage.setItem(LS.rotation, String(i)); }
@@ -325,6 +450,27 @@ function saveHistory(h){ localStorage.setItem(LS.history, JSON.stringify(h)); }
 function loadCurrent(){ try{ return JSON.parse(localStorage.getItem(LS.current)); }catch(e){ return null; } }
 function saveCurrent(c){ localStorage.setItem(LS.current, JSON.stringify(c)); }
 function clearCurrent(){ localStorage.removeItem(LS.current); }
+function loadWarmupList(){
+  try{
+    const w = JSON.parse(localStorage.getItem(LS.warmup));
+    return (w && w.length) ? w : DEFAULT_WARMUP.slice();
+  }catch(e){ return DEFAULT_WARMUP.slice(); }
+}
+function saveWarmupList(list){ localStorage.setItem(LS.warmup, JSON.stringify(list)); }
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+// One entry per calendar date. Adding a new entry for a date replaces any
+// existing one for that date (a finished workout will upgrade a logged rest day).
+function upsertHistoryEntry(entry){
+  const hist = loadHistory().filter(h => h.date !== entry.date);
+  hist.push(entry);
+  hist.sort((a,b)=> a.date < b.date ? -1 : (a.date > b.date ? 1 : 0));
+  saveHistory(hist);
+}
+function entryForDate(dateStr){
+  return loadHistory().find(h=> h.date === dateStr) || null;
+}
 
 function pickN(arr, n){
   const pool = arr.slice();
@@ -392,6 +538,18 @@ function renderExerciseList(workout){
   });
 }
 
+function renderTodayStatus(){
+  const el = document.getElementById('todayStatus');
+  const entry = entryForDate(todayStr());
+  if(!entry){ el.classList.remove('show'); el.innerHTML=''; return; }
+  if(entry.type === 'rest'){
+    el.innerHTML = `<b>Rest day</b> logged for today — streak is safe.`;
+  } else {
+    el.innerHTML = `<b>Workout done</b> today — ${CAT_LABEL[entry.focus]} focus, ${entry.rounds} round${entry.rounds===1?'':'s'}.`;
+  }
+  el.classList.add('show');
+}
+
 function refreshGenerateView(){
   const current = loadCurrent();
   const rotIdx = loadRotation();
@@ -405,6 +563,7 @@ function refreshGenerateView(){
     document.getElementById('focusName').textContent = CAT_LABEL[current.focus];
     renderFocusDots(CAT_ORDER.indexOf(current.focus));
   }
+  renderTodayStatus();
 }
 
 document.getElementById('genBtn').addEventListener('click', ()=>{
@@ -414,6 +573,17 @@ document.getElementById('genBtn').addEventListener('click', ()=>{
   renderFocusDots(CAT_ORDER.indexOf(w.focus));
   renderExerciseList(w);
   document.getElementById('toTimerBtn').disabled = false;
+});
+
+document.getElementById('restDayBtn').addEventListener('click', ()=>{
+  const existing = entryForDate(todayStr());
+  if(existing && existing.type !== 'rest'){
+    showToast("You already logged a workout today.");
+    return;
+  }
+  upsertHistoryEntry({ date: todayStr(), type: 'rest' });
+  showToast("Rest day logged — streak continues 🔥");
+  renderTodayStatus();
 });
 
 /* ---------------------------------------------------------
@@ -427,12 +597,13 @@ function showView(name){
   if(name==='timer') refreshTimerView();
   if(name==='history') refreshHistoryView();
   if(name==='generate') refreshGenerateView();
+  if(name==='warmup') refreshWarmupView();
 }
 tabButtons.forEach(b=> b.addEventListener('click', ()=> showView(b.dataset.view)));
 document.getElementById('toTimerBtn').addEventListener('click', ()=> showView('timer'));
 
 /* ---------------------------------------------------------
-   TIMER
+   AMRAP TIMER
 --------------------------------------------------------- */
 let durationMin = 15;
 let remainingSec = durationMin*60;
@@ -455,12 +626,12 @@ function updateTimerDisplay(){
   const frac = 1 - (remainingSec/total);
   ring.style.strokeDashoffset = CIRC * frac;
 }
-function beep(){
+function beep(freq){
   try{
     const ctx = new (window.AudioContext||window.webkitAudioContext)();
     const o = ctx.createOscillator(); const g = ctx.createGain();
     o.connect(g); g.connect(ctx.destination);
-    o.frequency.value = 880; g.gain.value = 0.15;
+    o.frequency.value = freq || 880; g.gain.value = 0.15;
     o.start(); setTimeout(()=>{ o.stop(); ctx.close(); }, 350);
   }catch(e){}
   if(navigator.vibrate) navigator.vibrate([200,100,200]);
@@ -528,15 +699,14 @@ document.getElementById('finishBtn').addEventListener('click', ()=>{
   if(!current){ showToast("Generate a workout first."); return; }
   stopTimer();
   const entry = {
-    date: new Date().toISOString().slice(0,10),
+    date: todayStr(),
+    type: 'workout',
     focus: current.focus,
     duration: durationMin,
     rounds: rounds,
     exercises: current.exercises
   };
-  const hist = loadHistory();
-  hist.push(entry);
-  saveHistory(hist);
+  upsertHistoryEntry(entry);
   clearCurrent();
   rounds = 0;
   document.getElementById('roundCount').textContent = 0;
@@ -547,6 +717,136 @@ document.getElementById('finishBtn').addEventListener('click', ()=>{
   showToast("Workout saved 💪");
   showView('history');
 });
+
+/* ---------------------------------------------------------
+   WARMUP TIMER (customizable interval sequence)
+--------------------------------------------------------- */
+let warmupList = loadWarmupList();
+let wuIdx = 0;
+let wuRemaining = warmupList.length ? warmupList[0].seconds : 0;
+let wuInterval = null;
+let wuRunning = false;
+
+function renderWarmupList(){
+  const wrap = document.getElementById('warmupListWrap');
+  wrap.innerHTML = '';
+  warmupList.forEach((item, i)=>{
+    const row = document.createElement('div');
+    row.className = 'warmup-row' + (wuRunning ? ' locked' : '');
+    row.innerHTML = `
+      <input type="text" value="${item.name.replace(/"/g,'&quot;')}" data-idx="${i}" class="wu-name">
+      <input type="number" min="5" step="5" value="${item.seconds}" data-idx="${i}" class="wu-secs">
+      <span class="sec-label">sec</span>
+      <button class="rm" data-idx="${i}">✕</button>
+    `;
+    wrap.appendChild(row);
+  });
+  wrap.querySelectorAll('.wu-name').forEach(inp=>{
+    inp.addEventListener('input', e=>{
+      warmupList[+e.target.dataset.idx].name = e.target.value;
+      saveWarmupList(warmupList);
+    });
+  });
+  wrap.querySelectorAll('.wu-secs').forEach(inp=>{
+    inp.addEventListener('input', e=>{
+      const v = Math.max(5, parseInt(e.target.value,10) || 5);
+      warmupList[+e.target.dataset.idx].seconds = v;
+      saveWarmupList(warmupList);
+      if(!wuRunning && +e.target.dataset.idx === wuIdx){
+        wuRemaining = v;
+        updateWarmupDisplay();
+      }
+    });
+  });
+  wrap.querySelectorAll('.rm').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      if(wuRunning) return;
+      const i = +e.target.dataset.idx;
+      warmupList.splice(i,1);
+      saveWarmupList(warmupList);
+      wuIdx = 0;
+      wuRemaining = warmupList.length ? warmupList[0].seconds : 0;
+      renderWarmupList();
+      updateWarmupDisplay();
+    });
+  });
+}
+
+document.getElementById('addWarmupBtn').addEventListener('click', ()=>{
+  if(wuRunning) return;
+  warmupList.push({name:"New Warmup", seconds:30});
+  saveWarmupList(warmupList);
+  renderWarmupList();
+});
+
+function wuFmt(sec){
+  const m = Math.floor(sec/60), s = sec%60;
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function updateWarmupDisplay(){
+  const card = document.getElementById('warmupActiveCard');
+  if(!warmupList.length){
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = 'block';
+  const item = warmupList[wuIdx];
+  document.getElementById('wuIdxLabel').textContent = `Warmup ${wuIdx+1} of ${warmupList.length}`;
+  document.getElementById('wuNameLabel').textContent = item ? item.name : 'Done';
+  document.getElementById('wuTimeLabel').textContent = wuFmt(wuRemaining);
+  const dots = document.getElementById('wuDots');
+  dots.innerHTML = '';
+  warmupList.forEach((it,i)=>{
+    const d = document.createElement('div');
+    d.className = 'd' + (i<wuIdx?' done':'') + (i===wuIdx?' cur':'');
+    dots.appendChild(d);
+  });
+}
+function wuTick(){
+  wuRemaining--;
+  if(wuRemaining<=0){
+    beep(660);
+    wuIdx++;
+    if(wuIdx >= warmupList.length){
+      wuStopTimer();
+      showToast("Warmup complete 🔥");
+      wuIdx = 0;
+      wuRemaining = warmupList.length ? warmupList[0].seconds : 0;
+      updateWarmupDisplay();
+      return;
+    }
+    wuRemaining = warmupList[wuIdx].seconds;
+  }
+  updateWarmupDisplay();
+}
+function wuStartTimer(){
+  if(!warmupList.length){ showToast("Add at least one warmup exercise."); return; }
+  wuRunning = true;
+  document.getElementById('wuStartPauseBtn').textContent = 'Pause';
+  renderWarmupList();
+  wuInterval = setInterval(wuTick, 1000);
+}
+function wuStopTimer(){
+  wuRunning = false;
+  document.getElementById('wuStartPauseBtn').textContent = 'Resume';
+  clearInterval(wuInterval);
+  renderWarmupList();
+}
+document.getElementById('wuStartPauseBtn').addEventListener('click', ()=>{
+  if(wuRunning) wuStopTimer(); else wuStartTimer();
+});
+document.getElementById('wuEndBtn').addEventListener('click', ()=>{
+  wuStopTimer();
+  wuIdx = 0;
+  wuRemaining = warmupList.length ? warmupList[0].seconds : 0;
+  document.getElementById('wuStartPauseBtn').textContent = 'Start';
+  updateWarmupDisplay();
+});
+function refreshWarmupView(){
+  warmupList = loadWarmupList();
+  renderWarmupList();
+  updateWarmupDisplay();
+}
 
 /* ---------------------------------------------------------
    HISTORY / STREAK / CALENDAR
@@ -560,9 +860,8 @@ function computeStreak(hist){
   let streak = 0;
   let cursor = new Date();
   cursor.setHours(0,0,0,0);
-  // if no workout today, streak counts back from yesterday (today not yet broken)
-  const todayStr = cursor.toISOString().slice(0,10);
-  if(!dates.has(todayStr)){
+  const tStr = cursor.toISOString().slice(0,10);
+  if(!dates.has(tStr)){
     cursor.setDate(cursor.getDate()-1);
   }
   while(true){
@@ -577,13 +876,14 @@ function computeStreak(hist){
 function renderCalendar(hist){
   const grid = document.getElementById('calGrid');
   grid.innerHTML = '';
-  const dateSet = new Set(uniqueDates(hist));
+  const byDate = {};
+  hist.forEach(h=> byDate[h.date] = h);
   const now = new Date();
   const year = now.getFullYear(), month = now.getMonth();
   const first = new Date(year, month, 1);
   const startDow = first.getDay();
   const daysInMonth = new Date(year, month+1, 0).getDate();
-  const todayStr = now.toISOString().slice(0,10);
+  const tStr = now.toISOString().slice(0,10);
 
   ['S','M','T','W','T','F','S'].forEach(d=>{
     const el = document.createElement('div');
@@ -597,9 +897,15 @@ function renderCalendar(hist){
   }
   for(let d=1; d<=daysInMonth; d++){
     const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const entry = byDate[dateStr];
     const el = document.createElement('div');
-    el.className = 'cal-cell' + (dateSet.has(dateStr)?' done':'') + (dateStr===todayStr?' today':'');
+    el.className = 'cal-cell' + (entry?' done':'') + (dateStr===tStr?' today':'');
     el.textContent = d;
+    if(entry){
+      const colorVar = entry.type==='rest' ? 'var(--rest)' : `var(${CAT_VAR[entry.focus]})`;
+      el.style.setProperty('--cell-color', colorVar);
+      el.addEventListener('click', ()=> openDetailModal(entry));
+    }
     grid.appendChild(el);
   }
 }
@@ -613,7 +919,7 @@ function refreshHistoryView(){
   const list = document.getElementById('historyList');
   list.innerHTML = '';
   if(hist.length===0){
-    list.innerHTML = '<div class="empty-state">No workouts logged yet. Finish an AMRAP to start your streak.</div>';
+    list.innerHTML = '<div class="empty-state">No workouts logged yet. Finish an AMRAP or log a rest day to start your streak.</div>';
     return;
   }
   hist.forEach(h=>{
@@ -621,16 +927,60 @@ function refreshHistoryView(){
     item.className = 'hist-item';
     const d = new Date(h.date+'T00:00:00');
     const dateLabel = d.toLocaleDateString(undefined,{weekday:'short', month:'short', day:'numeric'});
-    item.innerHTML = `
-      <div class="row1">
-        <span class="date">${dateLabel}</span>
-        <span class="badge" style="background:var(${CAT_VAR[h.focus]});color:#101114">${CAT_LABEL[h.focus]}</span>
-      </div>
-      <div class="meta">${h.duration} min AMRAP · ${h.rounds} round${h.rounds===1?'':'s'} · ${h.exercises.length} exercises</div>
-    `;
+    if(h.type === 'rest'){
+      item.innerHTML = `
+        <div class="row1">
+          <span class="date">${dateLabel}</span>
+          <span class="badge" style="background:var(--rest);color:#101114">Rest Day</span>
+        </div>
+        <div class="meta">Recovery — streak maintained</div>
+      `;
+    } else {
+      item.innerHTML = `
+        <div class="row1">
+          <span class="date">${dateLabel}</span>
+          <span class="badge" style="background:var(${CAT_VAR[h.focus]});color:#101114">${CAT_LABEL[h.focus]}</span>
+        </div>
+        <div class="meta">${h.duration} min AMRAP · ${h.rounds} round${h.rounds===1?'':'s'} · ${h.exercises.length} exercises</div>
+      `;
+    }
+    item.addEventListener('click', ()=> openDetailModal(h));
     list.appendChild(item);
   });
 }
+
+/* ---------------------------------------------------------
+   DETAIL MODAL (calendar day / history item)
+--------------------------------------------------------- */
+function openDetailModal(entry){
+  const d = new Date(entry.date+'T00:00:00');
+  const dateLabel = d.toLocaleDateString(undefined,{weekday:'long', month:'long', day:'numeric'});
+  document.getElementById('modalTitle').textContent = dateLabel;
+  const body = document.getElementById('modalBody');
+
+  if(entry.type === 'rest'){
+    body.innerHTML = `
+      <span class="mbadge" style="background:var(--rest);color:#101114">Rest Day</span>
+      <div class="mmeta">Logged as recovery — this day still counts toward your streak.</div>
+    `;
+  } else {
+    const exRows = entry.exercises.map(ex=>`
+      <div class="mex"><b>${ex.name}</b><span>${CAT_LABEL[ex.cat]}</span></div>
+    `).join('');
+    body.innerHTML = `
+      <span class="mbadge" style="background:var(${CAT_VAR[entry.focus]});color:#101114">${CAT_LABEL[entry.focus]} Focus</span>
+      <div class="mmeta">${entry.duration} min AMRAP · ${entry.rounds} round${entry.rounds===1?'':'s'} completed</div>
+      ${exRows}
+    `;
+  }
+  document.getElementById('modalBackdrop').classList.add('show');
+}
+document.getElementById('modalClose').addEventListener('click', ()=>{
+  document.getElementById('modalBackdrop').classList.remove('show');
+});
+document.getElementById('modalBackdrop').addEventListener('click', (e)=>{
+  if(e.target.id === 'modalBackdrop') document.getElementById('modalBackdrop').classList.remove('show');
+});
 
 /* ---------------------------------------------------------
    TOAST
@@ -652,6 +1002,8 @@ function showToast(msg){
   document.getElementById('streakMini').textContent = streak;
   refreshGenerateView();
   updateTimerDisplay();
+  renderWarmupList();
+  updateWarmupDisplay();
 })();
 
 })();
